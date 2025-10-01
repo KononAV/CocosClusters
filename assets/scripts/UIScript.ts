@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, Label, Node } from 'cc';
+import { _decorator, Button, Component, director, Label, Node } from 'cc';
 import { ViewModel } from './ViewModel';
 const { ccclass, property, executeInEditMode } = _decorator;
 
@@ -7,6 +7,12 @@ export class UIScript extends Component {
 
     @property({type:Button})
     private startButton:Button;
+
+
+    private _labelsDict:Map<string,number>=new Map<string, number>();
+
+
+
 
 
 
@@ -18,15 +24,30 @@ export class UIScript extends Component {
 
 
 
-    public onPropChanged(result, name){  
-        this.viewModel.parseNumber(result);
-        console.log(name);
+    public onPropChanged(result, name:Node){  
+        ;
+        this._labelsDict.set(name.name,this.viewModel.parseNumber(result))
+        console.log(this._labelsDict.get(name.name));
+        console.log(name.name);
+    }
+
+    public onStartPressed(){
+        console.log("start");
+        director.emit("start-clusters", {params:this._labelsDict});
+        //return (this._labelsDict.get("EnterX<EditBox>"), )
+
     }
 
    
 
 
     start() {
+        this._labelsDict.set("EnterX<EditBox>",0);
+        this._labelsDict.set("EnterY<EditBox>",0);
+
+        this._labelsDict.set("EnterN<EditBox>",0);
+        this._labelsDict.set("EnterM<EditBox>",0);
+
 
     }
 

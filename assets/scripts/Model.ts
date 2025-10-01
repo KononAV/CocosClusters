@@ -1,4 +1,4 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, director, Label, Node } from 'cc';
 import { ViewModel } from './ViewModel';
 import { RandomGenerator } from './RandomGenerator';
 import { Selection } from './Selection';
@@ -26,21 +26,41 @@ export class Model extends Component {
         private _randomGenerator: RandomGenerator;
 
 
-        private resultClusters;
 
     start() {
-        this.resultClusters = [];
+        
+
+        director.on("start-clusters", (eventData: { params: Map<string, number> }) => {
+            this.resetCluster();
+    let params = eventData.params;
+
+    
+
+    this._clusterTypes   = params.get("EnterX<EditBox>")!;
+    this._clusterMinSize = params.get("EnterY<EditBox>")!;
+    this._poleX          = params.get("EnterN<EditBox>")!;
+    this._poleY          = params.get("EnterM<EditBox>")!;
+
+
+    if(this._poleX>this._maxX||this._poleY>this._maxY||this._poleX<0||this._poleY<0){this.viewModel.enableError(true, "One of rules is violated");return;}
+
+
+
+
+    this.afterStart();
+}, this);
+    }
+
+
+    private afterStart(){
         this._randomGenerator = new RandomGenerator(this._clusterTypes, this._clusterMinSize, this._poleX, this._poleY);
         console.log("init model");
         
         this.viewModel.muteElements(this.poleElements.children);
         this.preferedArrayToAnmute();console.log(this.poleElements.children.length);
-
     }
 
-    private setColors(){
 
-    }
 
 
 
@@ -89,58 +109,68 @@ export class Model extends Component {
     }
 
 
-    private defineClusters(arr:Array<Node>){
-        let resultArr = this.recreateArray(arr);
+   private defineClusters(arr: Array<Node>) {
+    let resultArr = this.recreateArray(arr);
 
-        for(let i =0; i<this._poleY;i++){
-            for(let j = 0; j<this._poleX;j++){
-                this.recurseCheck(resultArr, [], i,j);
+    for (let i = 0; i < this._poleY; i++) {
+        for (let j = 0; j < this._poleX; j++) {
+            let node = resultArr[i][j];
+            let sel = node.getComponent(Selection);
 
+            if (!sel.isVisited) {
+                let cluster: Node[] = [];
+                this.recurseCheck(resultArr, cluster, i, j);
+
+                if (cluster.length >= this._clusterMinSize) {
+
+                    console.log("CLUSTER FOUND, size =", cluster.length);
+                    this.viewModel.drawLabelForCluster(cluster,"!");
+                }
             }
         }
-
-        this.resultClusters.forEach((element:Array<Node>) => {
-            if(element.length>this._clusterMinSize)console.log("CLUSTER FOUND");
-        });
     }
 
-    private recurseCheck(arr:Array<Node>, minArr:Array<Node> = [], i:number, j:number)
-    {
-        //let miniClusterCount = [];
 
-        //arr[i][j].getComponent(Selection).isVisited = true;
-
-
-        console.log(arr?.[i-1][j]+" VALID");
-
-        console.log(arr[i][j].getComponent(Selection).colorId + "ID");
-        if(arr?.[i][j-1]&&!arr[i][j-1].getComponent(Selection).isVisited&&arr[i][j].getComponent(Selection).colorId == arr[i][j-1].getComponent(Selection).colorId)
-            {
-                minArr.push(arr[i][j-1]);
-                this.recurseCheck(arr, minArr,i,j-1);
-            }
-        if(arr?.[i+1][j]&&!arr[i+1][j].getComponent(Selection).isVisited&&arr[i][j].getComponent(Selection).colorId == arr[i+1][j].getComponent(Selection).colorId)
-            {
-                minArr.push(arr[i+1][j]);
-                this.recurseCheck(arr, minArr,i+1,j);
-            }
-        if(arr?.[i][j+1]&&!arr[i][j+1].getComponent(Selection).isVisited&&arr[i][j].getComponent(Selection).colorId == arr[i][j+1].getComponent(Selection).colorId)
-            {
-                minArr.push(arr[i][j+1]);
-                this.recurseCheck(arr, minArr,i,j+1);
-            }
-        if(arr?.[i-1][j]&&!arr[i-1][j].getComponent(Selection).isVisited&&arr[i][j].getComponent(Selection).colorId == arr[i-1][j].getComponent(Selection).colorId)
-            {
-                minArr.push(arr[i-1][j]);
-                this.recurseCheck(arr, minArr,i-1,j);
-            }
-            
-                return this.resultClusters.push(minArr);
-
-            
-
-
+    for (let row of resultArr) {
+        for (let node of row) {
+            node.getComponent(Selection).isVisited = false;
     }
+}
+}
+
+
+private resetCluster(){
+    this.viewModel.drawLabelForCluster(this.poleElements.children,"");
+}
+
+
+
+private recurseCheck(arr: Array<Array<Node>>, cluster: Node[], i: number, j: number) {
+    if (i < 0 || j < 0 || i >= arr.length || j >= arr[0].length) return;
+
+    let node = arr[i][j];
+    let sel = node.getComponent(Selection);
+
+    if (sel.isVisited) return;
+
+    sel.isVisited = true;
+    cluster.push(node);
+
+    let colorId = sel.colorId;
+
+    if (j - 1 >= 0 && arr[i][j - 1].getComponent(Selection).colorId === colorId)
+        this.recurseCheck(arr, cluster, i, j - 1);
+
+    if (j + 1 < arr[0].length && arr[i][j + 1].getComponent(Selection).colorId === colorId)
+        this.recurseCheck(arr, cluster, i, j + 1);
+
+    if (i - 1 >= 0 && arr[i - 1][j].getComponent(Selection).colorId === colorId)
+        this.recurseCheck(arr, cluster, i - 1, j);
+
+    if (i + 1 < arr.length && arr[i + 1][j].getComponent(Selection).colorId === colorId)
+        this.recurseCheck(arr, cluster, i + 1, j);
+}
+
 
 
 

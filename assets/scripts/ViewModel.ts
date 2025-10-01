@@ -12,6 +12,7 @@ export class ViewModel extends Component {
 
     start() {
 
+
     }
 
     update(deltaTime: number) {
@@ -19,7 +20,7 @@ export class ViewModel extends Component {
     }
 
 
-    private enableError(isEnabled:boolean, errorText:string = ""){
+    public enableError(isEnabled:boolean, errorText:string = ""){
             this.errorLabel.node.active = isEnabled;
             this.errorLabel.string = errorText;
            
@@ -33,13 +34,16 @@ export class ViewModel extends Component {
             console.log("number"+numRes);
             this.enableError(false);
 
+            
+
         }
-        else {console.log("IT NAN");
+        else {//console.log("IT NAN");
             this.enableError( true,"Input is not a number")
 
 
             
         }
+        return numRes;
     }
 
 
@@ -52,15 +56,22 @@ export class ViewModel extends Component {
     public ummuteFixedCount(arrayOfElem:Array<Node>, count:number){
         arrayOfElem.forEach((elem:Node)=>{
             elem.active = true;
-            console.log("unmute");
+            //console.log("unmute");
         })
 
     }
 
     public switchColor(elem:Node, color:Color){
-            console.log(elem+" in switching");
+            //console.log(elem+" in switching");
             elem.getComponent(Sprite).color = color;
         
+
+    }
+
+    public drawLabelForCluster(cluster: Node[], symb:string){
+        cluster.forEach((elem:Node)=>{
+            elem.getComponentInChildren(Label).string = symb;
+        })
 
     }
 
