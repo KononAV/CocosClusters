@@ -13,8 +13,8 @@ export class Model extends Component {
         @property({type:Node})
         private poleElements:Node;
 
-        private _poleX: number=10;
-        private _poleY: number=7;
+        private _poleX: number=5;
+        private _poleY: number=5;
 
         private _maxX = 10;
         private _maxY = 7;
@@ -59,7 +59,7 @@ export class Model extends Component {
                 console.log(this._randomGenerator.getDictRes(i*this._poleX+j)+" generated");
                 this.viewModel.switchColor(preferedArray[i*this._poleX+j], this._randomGenerator.getDictRes(i*this._poleX+j));
                 preferedArray[i*this._poleX+j].getComponent(Selection).colorId = this._randomGenerator.getColorPole(i*this._poleX+j);
-                console.log(preferedArray[i*this._poleX+j].colorId+" id");
+            
                 
             }
             addNum+=this._maxX-this._poleX;
@@ -108,7 +108,10 @@ export class Model extends Component {
     {
         //let miniClusterCount = [];
 
-        arr[i][j].getComponent(Selection).isVisited = true;
+        //arr[i][j].getComponent(Selection).isVisited = true;
+
+
+        console.log(arr?.[i-1][j]+" VALID");
 
         console.log(arr[i][j].getComponent(Selection).colorId + "ID");
         if(arr?.[i][j-1]&&!arr[i][j-1].getComponent(Selection).isVisited&&arr[i][j].getComponent(Selection).colorId == arr[i][j-1].getComponent(Selection).colorId)
@@ -131,10 +134,10 @@ export class Model extends Component {
                 minArr.push(arr[i-1][j]);
                 this.recurseCheck(arr, minArr,i-1,j);
             }
-            else{
+            
                 return this.resultClusters.push(minArr);
 
-            }
+            
 
 
     }
