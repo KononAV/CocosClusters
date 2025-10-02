@@ -1,4 +1,4 @@
-import { _decorator, AsyncDelegate, Color, Component, Label, Node, Sprite } from 'cc';
+import { _decorator, AsyncDelegate, Color, Component, Label, Node, SkeletalAnimation, Skeleton, sp, Sprite } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('ViewModel')
@@ -6,6 +6,8 @@ export class ViewModel extends Component {
 
      @property({type:Label})
     private errorLabel:Label;
+
+    
 
 
 
@@ -58,8 +60,9 @@ export class ViewModel extends Component {
 
     }
 
-    public switchColor(elem:Node, color:Color){
-            elem.getComponent(Sprite).color = color;
+    public switchColor(elem:Node, color:sp.SkeletonData){
+            elem.getComponentInChildren(sp.Skeleton).skeletonData = color;
+            console.log(elem.name);
         
 
     }

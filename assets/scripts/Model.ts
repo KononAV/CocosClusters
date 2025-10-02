@@ -1,4 +1,4 @@
-import { _decorator, Component, director, Label, Node } from 'cc';
+import { _decorator, Component, debug, director, error, Label, Node } from 'cc';
 import { ViewModel } from './ViewModel';
 import { RandomGenerator } from './RandomGenerator';
 import { Selection } from './Selection';
@@ -151,7 +151,6 @@ export class Model extends Component {
 
    private defineClusters(arr: Array<Node>) {
     let resultArr = this.recreateArray(arr);
-    //let clustersArr = [];
 
     for (let i = 0; i < this._poleY; i++) {
         for (let j = 0; j < this._poleX; j++) {
@@ -165,16 +164,11 @@ export class Model extends Component {
                 if (cluster.length >= this._clusterMinSize) {
                     this.clustersArr.push(cluster);
 
-                    //this.redrawLabel(cluster,100,"!");
                 }
             }
         }
     }
 
-    
-    // for(let i = 0;i<clustersArr.length;i++){
-    //     this.redrawLabel(clustersArr[i],10000,"!");
-    // }
 
     
 
