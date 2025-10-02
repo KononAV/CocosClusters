@@ -1,4 +1,4 @@
-import { _decorator, Color, Component, Label, Node, Sprite } from 'cc';
+import { _decorator, AsyncDelegate, Color, Component, Label, Node, Sprite } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('ViewModel')
@@ -29,7 +29,7 @@ export class ViewModel extends Component {
 
 
     public parseNumber(result){
-        const numRes:number = parseInt(result);
+        let numRes:number = parseInt(result);
         if(!isNaN(numRes)){
             console.log("number"+numRes);
             this.enableError(false);
@@ -39,6 +39,7 @@ export class ViewModel extends Component {
         }
         else {//console.log("IT NAN");
             this.enableError( true,"Input is not a number")
+            //numRes = 0;
 
 
             
@@ -49,15 +50,13 @@ export class ViewModel extends Component {
 
     public muteElements(arrayOfElem:Array<Node>){
         arrayOfElem.forEach((elem:Node)=>{
+            if(elem==null)return;
             elem.active = false;
         })
     }
 
-    public ummuteFixedCount(arrayOfElem:Array<Node>, count:number){
-        arrayOfElem.forEach((elem:Node)=>{
-            elem.active = true;
-            //console.log("unmute");
-        })
+    public async ummuteFixedCount(elem:Node){
+        elem.active = true;
 
     }
 
@@ -68,12 +67,17 @@ export class ViewModel extends Component {
 
     }
 
-    public drawLabelForCluster(cluster: Node[], symb:string){
-        cluster.forEach((elem:Node)=>{
-            elem.getComponentInChildren(Label).string = symb;
-        })
+    public drawLabelForCluster(cluster: Node, symb:string){
+        if(cluster==null)return;
+        cluster.getComponentInChildren(Label).string = symb;
+
+        // cluster.forEach((elem:Node)=>{
+        //     elem.getComponentInChildren(Label).string = symb;
+        // })
 
     }
+
+
 
 }
 

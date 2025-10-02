@@ -13,25 +13,35 @@ export class Model extends Component {
         @property({type:Node})
         private poleElements:Node;
 
-        private _poleX: number=5;
-        private _poleY: number=5;
+        private _poleX: number=0;
+        private _poleY: number=0;
 
         private _maxX = 10;
         private _maxY = 7;
 
-        private _clusterTypes: number=4;
-        private _clusterMinSize:number=3;
+        private _clusterTypes: number=0;
+        private _clusterMinSize:number=0;
 
 
         private _randomGenerator: RandomGenerator;
 
+        private isGenering:boolean = false;
 
 
-    start() {
+
+
+
+   async start() {
         
 
         director.on("start-clusters", (eventData: { params: Map<string, number> }) => {
+            
+            if(this.isGenering)return;
+            
+                this.viewModel.muteElements(this.poleElements.children);
+
             this.resetCluster();
+            
     let params = eventData.params;
 
     
@@ -42,11 +52,15 @@ export class Model extends Component {
     this._poleY          = params.get("EnterM<EditBox>")!;
 
 
-    if(this._poleX>this._maxX||this._poleY>this._maxY||this._poleX<0||this._poleY<0){this.viewModel.enableError(true, "One of rules is violated");return;}
+    if(this._poleX>this._maxX||this._poleY>this._maxY||this._poleX<0||this._poleY<0){
+        this.viewModel.enableError(true, "One of rules is violated");
+        this._poleX=this._poleY=this._clusterMinSize=this._clusterTypes=0;
+        return;
+        }
 
 
 
-
+    this.isGenering=true;
     this.afterStart();
 }, this);
     }
@@ -57,7 +71,7 @@ export class Model extends Component {
         console.log("init model");
         
         this.viewModel.muteElements(this.poleElements.children);
-        this.preferedArrayToAnmute();console.log(this.poleElements.children.length);
+        this.preferedArrayToAnmute();
     }
 
 
@@ -84,9 +98,34 @@ export class Model extends Component {
             }
             addNum+=this._maxX-this._poleX;
         }
-        this.viewModel.ummuteFixedCount(preferedArray,0);
+        
+        //this.viewModel.ummuteFixedCount(preferedArray,0);
 
         this.defineClusters(preferedArray);
+        this.ummuteClusters(preferedArray);
+    }
+
+
+
+    private async ummuteClusters(arr:Node[]){
+        const sleep = ms=>new Promise(resolve=>setTimeout(resolve,ms));
+
+        await Promise.all(arr.map(async(item, index)=>{
+            
+
+            await sleep(index*100);
+            this.viewModel.ummuteFixedCount(item);
+            
+        })).catch(error=>{
+            
+            this.viewModel.muteElements(this.poleElements.children);
+            return Promise.reject(error);
+        }).catch(error=>error).then(()=>this.markClusters()).then(()=>{this.redrawLabel(100);}).then(()=>{this.isGenering=false});
+        //const promises = arr.map(item=>this.viewModel.ummuteFixedCount(item));
+        
+        
+
+
     }
 
     update(deltaTime: number) {
@@ -109,8 +148,12 @@ export class Model extends Component {
     }
 
 
+    private clustersArr = [];
+
+
    private defineClusters(arr: Array<Node>) {
     let resultArr = this.recreateArray(arr);
+    //let clustersArr = [];
 
     for (let i = 0; i < this._poleY; i++) {
         for (let j = 0; j < this._poleX; j++) {
@@ -122,13 +165,20 @@ export class Model extends Component {
                 this.recurseCheck(resultArr, cluster, i, j);
 
                 if (cluster.length >= this._clusterMinSize) {
+                    this.clustersArr.push(cluster);
 
-                    console.log("CLUSTER FOUND, size =", cluster.length);
-                    this.viewModel.drawLabelForCluster(cluster,"!");
+                    //this.redrawLabel(cluster,100,"!");
                 }
             }
         }
     }
+
+    
+    // for(let i = 0;i<clustersArr.length;i++){
+    //     this.redrawLabel(clustersArr[i],10000,"!");
+    // }
+
+    
 
 
     for (let row of resultArr) {
@@ -136,11 +186,48 @@ export class Model extends Component {
             node.getComponent(Selection).isVisited = false;
     }
 }
+
+}
+
+private markClusters(){
+    this.clustersArr.forEach((item:Node[])=>{
+        item.map((item:Node)=>item.getComponent(Selection).selfSymbol = "!");
+
+
+    });
+    this.clustersArr = [];
+
+}
+
+
+
+
+
+
+
+private async redrawLabel(time:number){
+    const sleep = ms=>new Promise(resolve=>setTimeout(resolve,ms));
+
+        await Promise.all(this.poleElements.children.map(async(item, index)=>{
+            
+
+            await sleep(index*time);
+            this.viewModel.drawLabelForCluster(item, item.getComponent(Selection).selfSymbol);
+        })).catch(error=>error);
+        //const promises = arr.map(item=>this.viewModel.ummuteFixedCount(item));
+        
+        
+
+
+
 }
 
 
 private resetCluster(){
-    this.viewModel.drawLabelForCluster(this.poleElements.children,"");
+    this.poleElements.children.forEach((item:Node)=>item.getComponent(Selection).selfSymbol = "");
+    this.redrawLabel(0);
+
+    //this.viewModel.drawLabelForCluster(this.poleElements.children,"");
 }
 
 
@@ -177,5 +264,4 @@ private recurseCheck(arr: Array<Array<Node>>, cluster: Node[], i: number, j: num
 
 
 }
-
 

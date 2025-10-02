@@ -27,12 +27,11 @@ export class UIScript extends Component {
     public onPropChanged(result, name:Node){  
         ;
         this._labelsDict.set(name.name,this.viewModel.parseNumber(result))
-        console.log(this._labelsDict.get(name.name));
-        console.log(name.name);
+
     }
 
     public onStartPressed(){
-        console.log("start");
+ 
         director.emit("start-clusters", {params:this._labelsDict});
         //return (this._labelsDict.get("EnterX<EditBox>"), )
 
@@ -49,6 +48,12 @@ export class UIScript extends Component {
         this._labelsDict.set("EnterM<EditBox>",0);
 
 
+    }
+
+
+
+    public blockStart(isBlocking:boolean){
+        this.startButton.node.active = isBlocking;
     }
 
     update(deltaTime: number) {

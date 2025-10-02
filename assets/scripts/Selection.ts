@@ -10,6 +10,7 @@ export class Selection extends Component {
         //@property({type:Number})
         public colorId:number=0;
         public isVisited:boolean = false;
+        public selfSymbol:string = "";
 
 
 
@@ -21,6 +22,8 @@ export class Selection extends Component {
     update(deltaTime: number) {
         
     }
+
+
 
 
 

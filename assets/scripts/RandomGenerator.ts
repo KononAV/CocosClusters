@@ -54,14 +54,12 @@ export class RandomGenerator{
                 Math.floor(Math.random()*256),
                 Math.floor(Math.random()*256)
             ));
-            console.log("color "+this._colorDict.get(i));
         }
 
     }
 
 
     public getDictRes(id:number){
-        console.log(id)
         return this._colorDict.get(this._colorArr[id]);
 
     }
