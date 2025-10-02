@@ -1,8 +1,5 @@
 # **Find Clusters**
 
-
-<img src="https://github.com/user-attachments/assets/294263a2-ac45-4137-9614-b27eb19c0a32" alt="CardGame GIF" width="600" />
-
 ## *Summary*
 
 ### Implemented features include:
