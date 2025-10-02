@@ -6,36 +6,22 @@
 ## *Summary*
 
 ### Implemented features include:
-- Three game modes: Infinity, Basic, and Mistake
-- Loading screens and smooth scene transitions
-- Saving system to preserve player progress
-- Achievement system triggered by in-game events
-- Reward system: players receive new card sets as rewards for each achievement unlocked
-- Swipe adding mode for intuitive card selection and interaction
-- Joker card mode
-- Responsive UI optimized for mobile devices
+- Pole generation
+- System for clusters assese(BFS)
+- Clusters special symbol
+- Random generated colors
+- Async functions for clusters and pole appearance
+- UI for reset parameters 
 
-### Not implemented features:
-- Audio: effects, background music
-- Levels and rogressive stages to increase challenge and variety.
-- Additional card sets: More diverse and themed card sets for rewards or customization are planned but not yet implemented
-- Threeple or more cards for pair. all machinics are done 
 ## *Gameplay Media*
-
-<details>
-  <summary>Show gameplay videos and screenshots</summary>
-
-  ### Videos
-
-  [![Watch gameplay video](https://img.youtube.com/vi/UCK7Kle86KE/hqdefault.jpg)](https://youtu.be/UCK7Kle86KE)
 
   ### Screenshots
 
   <p align="center">
-    <img width="600" alt="image" src="https://github.com/user-attachments/assets/c7cb02c9-9007-43f3-ba43-3e3ff490eaf5" />
-    <img width="600" alt="image" src="https://github.com/user-attachments/assets/12c97d86-e3f3-402b-8c78-8611061cea0c" />
-    <img width="600" alt="image" src="https://github.com/user-attachments/assets/ef26343f-25b6-45fc-9ab6-5d740ef93121" />
-    <img width="600" alt="image" src="https://github.com/user-attachments/assets/7d4ecf6a-50d9-4e49-9c66-aeab7d98e904" />
+    <img width="600" alt="image" src="https://github.com/user-attachments/assets/5c9fc486-fa3e-4b3c-87a7-c7dea282b729" />
+    <img width="600" alt="image" src="https://github.com/user-attachments/assets/6968c23a-8038-49dd-bd78-620744e9b01a" />
+    <img width="600" alt="image" src="https://github.com/user-attachments/assets/46765927-ca5f-49e5-a073-0f100fc56dc8"  />
+    <img width="600" alt="image" src="https://github.com/user-attachments/assets/7d25afa9-573a-4293-9750-44627016ed47" />
   </p>
 
 </details>
