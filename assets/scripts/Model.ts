@@ -68,7 +68,6 @@ export class Model extends Component {
 
     private afterStart(){
         this._randomGenerator = new RandomGenerator(this._clusterTypes, this._clusterMinSize, this._poleX, this._poleY);
-        console.log("init model");
         
         this.viewModel.muteElements(this.poleElements.children);
         this.preferedArrayToAnmute();
@@ -90,7 +89,6 @@ export class Model extends Component {
 
                 
                 preferedArray[i*this._poleX+j] = this.poleElements.children[i*this._poleX+j+addNum];
-                console.log(this._randomGenerator.getDictRes(i*this._poleX+j)+" generated");
                 this.viewModel.switchColor(preferedArray[i*this._poleX+j], this._randomGenerator.getDictRes(i*this._poleX+j));
                 preferedArray[i*this._poleX+j].getComponent(Selection).colorId = this._randomGenerator.getColorPole(i*this._poleX+j);
             

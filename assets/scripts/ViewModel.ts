@@ -31,15 +31,13 @@ export class ViewModel extends Component {
     public parseNumber(result){
         let numRes:number = parseInt(result);
         if(!isNaN(numRes)){
-            console.log("number"+numRes);
             this.enableError(false);
 
             
 
         }
-        else {//console.log("IT NAN");
+        else {
             this.enableError( true,"Input is not a number")
-            //numRes = 0;
 
 
             
@@ -61,7 +59,6 @@ export class ViewModel extends Component {
     }
 
     public switchColor(elem:Node, color:Color){
-            //console.log(elem+" in switching");
             elem.getComponent(Sprite).color = color;
         
 
@@ -71,9 +68,7 @@ export class ViewModel extends Component {
         if(cluster==null)return;
         cluster.getComponentInChildren(Label).string = symb;
 
-        // cluster.forEach((elem:Node)=>{
-        //     elem.getComponentInChildren(Label).string = symb;
-        // })
+
 
     }
 

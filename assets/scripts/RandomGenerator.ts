@@ -34,7 +34,6 @@ export class RandomGenerator{
             //this._colorArr[i] = [];
             for(let j =0; j<x;j++){
                 this._colorArr[i*x+j] = Math.floor(Math.random()*(randomMax));
-                //console.log(this._colorDict.get(Math.floor(Math.random()*(randomMax)))+" from mass");
             }
         }
 
@@ -47,7 +46,6 @@ export class RandomGenerator{
     private initColors(count:number)
     {
         for(let i = 0;i<count;i++){
-            console.log(i);
 
             this._colorDict.set(i, new Color(
                 Math.floor(Math.random()*256),
