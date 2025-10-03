@@ -10,6 +10,7 @@ import {
   sp,
   Sprite,
 } from "cc";
+import { SymbolEmmiter } from "./SymbolEmmiter";
 const { ccclass, property } = _decorator;
 
 @ccclass("ViewModel")
@@ -47,14 +48,16 @@ export class ViewModel extends Component {
     elem.active = true;
   }
 
-  public switchColor(elem: Node, second: Node) {
-    elem.addChild(second);
+  public switchColor(elem: SymbolEmmiter, second: Node) {
+    elem.setSelfPrefab(second);
+    //elem.addChild(second);
     // elem.getComponentInChildren(sp.Skeleton).skeletonData = color;
     // console.log(elem.name);
   }
 
   public drawLabelForCluster(cluster: Node, symb: string) {
     if (cluster == null) return;
+
     cluster.getComponentInChildren(Label).string = symb;
   }
 }

@@ -17,7 +17,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass("RandomGenerator")
 export class RandomGenerator {
-  private _colorArr;
+  private _colorArr: number[];
 
   public constructor(colorsCount: number, x: number, y: number) {
     this._colorArr = [];
@@ -29,9 +29,11 @@ export class RandomGenerator {
     for (let i = 0; i < y; i++) {
       for (let j = 0; j < x; j++) {
         this._colorArr[i * x + j] = Math.floor(Math.random() * randomMax);
+        console.log(this._colorArr[i * x + j] + "COLOR ARR");
       }
     }
-    console.log(this._colorArr[0] + "COLOR ARR");
+    const shuffeled: number[] = this._colorArr.sort(() => Math.random() - 0.5);
+    this._colorArr = shuffeled;
   }
 
   public getRandomPole(id: number) {

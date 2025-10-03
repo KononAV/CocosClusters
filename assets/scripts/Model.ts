@@ -104,16 +104,15 @@ export class Model extends Component {
       for (let j = 0; j < this._poleX; j++) {
         preferedArray[i * this._poleX + j] =
           this.poleElements.children[i * this._poleX + j + addNum];
-        console.log(this._randomGenerator.getRandomPole(i + this._poleX + j));
-        console.log(preferedArray[i * this._poleX + j].name + " name");
         this.viewModel.switchColor(
-          preferedArray[i * this._poleX + j],
+          preferedArray[i * this._poleX + j].getComponent(SymbolEmmiter),
           this.pool.getElementFromPool(
-            this._randomGenerator.getRandomPole(i + this._poleX + j)
+            this._randomGenerator.getRandomPole(i * this._poleX + j)
           )
         );
+        console.log(i * this._poleX + j + "in arr");
         preferedArray[i * this._poleX + j].getComponent(SymbolEmmiter).colorId =
-          this._randomGenerator.getRandomPole(i + this._poleX + j);
+          this._randomGenerator.getRandomPole(i * this._poleX + j);
       }
       addNum += this._maxX - this._poleX;
     }
@@ -188,9 +187,7 @@ export class Model extends Component {
 
   private markClusters() {
     this.clustersArr.forEach((item: Node[]) => {
-      item.map(
-        (item: Node) => (item.getComponent(SymbolEmmiter).selfSymbol = "!")
-      );
+      item.map((item: Node) => item.getComponent(SymbolEmmiter).setWin());
     });
     this.clustersArr = [];
   }
@@ -211,11 +208,13 @@ export class Model extends Component {
   }
 
   private resetCluster() {
-    // this.poleElements.children.forEach(
-    //   (item: Node) => (item.getComponent(SymbolEmmiter).selfSymbol = "")
-    // );
-    // this.redrawLabel(0);
-    // this.viewModel.drawLabelForCluster(this.poleElements.children, "");
+    this.poleElements.children.forEach((item: Node) => {
+      const emit = item.getComponent(SymbolEmmiter);
+      emit.selfSymbol = "";
+      this.pool.returnToPool(emit);
+    });
+    this.redrawLabel(0);
+    //this.viewModel.drawLabelForCluster(this.poleElements.children, "");
   }
 
   private recurseCheck(

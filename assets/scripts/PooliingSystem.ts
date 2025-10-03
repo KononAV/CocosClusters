@@ -42,7 +42,7 @@ export class PooliingSystem extends Component {
   }
 
   public returnToPool(selection: SymbolEmmiter) {
-    //selection.isActive = false;
+    selection.isActive = false;
   }
 
   update(deltaTime: number) {}

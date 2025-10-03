@@ -1,22 +1,55 @@
-import { _decorator, Component, Node, Prefab } from "cc";
+import {
+  _decorator,
+  Component,
+  Node,
+  Prefab,
+  SkeletalAnimation,
+  Skeleton,
+  sp,
+} from "cc";
 import { PooliingSystem } from "./PooliingSystem";
+import { Selection } from "./Selection";
 const { ccclass, property } = _decorator;
 
 @ccclass("SymbolEmmiter")
 export class SymbolEmmiter extends Component {
-  @property(Prefab)
   private selfPrefab: Node;
 
-  public colorId: number = 0;
+  public colorId: number;
+
   public isVisited: boolean = false;
   public selfSymbol: string = "";
   public isActive: boolean = false;
 
-  public setSelfPrefab(pref: Node) {
-    this.selfPrefab = pref;
+  private anim: sp.Skeleton;
 
-    this.node.children.push(this.selfPrefab);
+  private isWin: boolean = false;
+
+  protected start(): void {
+    console.log("start  emmiter");
+    this.anim = this.getComponentInChildren(sp.Skeleton);
+
+    // this.schedule(() => {
+    //   this.anim.setAnimation(0, "idle", false);
+    // }, 2);
   }
 
-  update(deltaTime: number) {}
+  public setSelfPrefab(pref: Node) {
+    this.selfPrefab = pref;
+    this.setPrefab();
+  }
+
+  private setPrefab() {
+    this.colorId = this.selfPrefab.getComponent(Selection).colorId;
+    this.anim.skeletonData = this.selfPrefab.getComponentInChildren(
+      sp.Skeleton
+    ).skeletonData;
+    this.anim.setAnimation(0, "in", false);
+    this.isWin = false;
+  }
+
+  public setWin() {
+    this.anim.setAnimation(0, "win", true);
+    this.isWin = true;
+  }
 }
