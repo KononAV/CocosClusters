@@ -38,12 +38,12 @@
       }
     ],
     "_prefab": {
-      "__id__": 21
+      "__id__": 20
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -590.304,
-      "y": 310.31,
+      "x": 0,
+      "y": 0,
       "z": 0
     },
     "_lrot": {
@@ -92,8 +92,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 3.0025284450063054,
-      "y": 2.0543615676358513,
+      "x": 0,
+      "y": 0,
       "z": 0
     },
     "_lrot": {
@@ -251,8 +251,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 1.23,
-      "y": -3.689,
+      "x": 0,
+      "y": 0,
       "z": 0
     },
     "_lrot": {
@@ -449,24 +449,11 @@
     "__prefab": {
       "__id__": 19
     },
-    "prefabs": {
-      "__id__": 20
-    },
-    "skeleton": {
-      "__uuid__": "f4267ba5-b445-46b4-ad94-1911e7f06a6f",
-      "__expectedType__": "sp.SkeletonData"
-    },
-    "winAnimName": "win",
-    "idleAnimName": "dis",
-    "inAnimName": "in",
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
     "fileId": "606a24yABHza6pQiVChNDM"
-  },
-  {
-    "__type__": "Symbol"
   },
   {
     "__type__": "cc.PrefabInfo",
