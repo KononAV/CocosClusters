@@ -18,7 +18,6 @@ export class UIScript extends Component {
 
   public onStartPressed() {
     director.emit("start-clusters", { params: this._labelsDict });
-    //return (this._labelsDict.get("EnterX<EditBox>"), )
   }
 
   start() {

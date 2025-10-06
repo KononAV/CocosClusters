@@ -172,7 +172,7 @@
     "_string": "",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 40,
+    "_actualFontSize": 40.25,
     "_fontSize": 40,
     "_fontFamily": "Arial",
     "_lineHeight": 82.7,
@@ -334,7 +334,7 @@
     },
     "defaultSkin": "default",
     "defaultAnimation": "in",
-    "_premultipliedAlpha": true,
+    "_premultipliedAlpha": false,
     "_timeScale": 1,
     "_preCacheMode": 0,
     "_cacheMode": 0,
@@ -344,7 +344,7 @@
     "_debugBones": false,
     "_debugSlots": false,
     "_enableBatch": false,
-    "loop": true,
+    "loop": false,
     "_id": ""
   },
   {

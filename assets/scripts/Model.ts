@@ -40,8 +40,6 @@ export class Model extends Component {
   private pool: PooliingSystem;
 
   async start() {
-    console.log(this.poleElements.children.length + " length pole");
-
     this._randomGenerator = new RandomGenerator(
       this._clusterTypes,
       this._poleX,
@@ -50,12 +48,11 @@ export class Model extends Component {
 
     this.pool.createDictForPool();
 
-    //this.node.addChild(this.pool.getElementFromPool(1));
-
     director.on(
       "start-clusters",
       (eventData: { params: Map<string, number> }) => {
         if (this.isGenering) return;
+        this.clusterArrClean();
         this.viewModel.muteElements(this.poleElements.children);
         this.resetCluster();
         let params = eventData.params;
@@ -63,25 +60,34 @@ export class Model extends Component {
         this._clusterMinSize = params.get("EnterY<EditBox>")!;
         this._poleX = params.get("EnterN<EditBox>")!;
         this._poleY = params.get("EnterM<EditBox>")!;
-        // if (
-        //   this._poleX > this._maxX ||
-        //   this._poleY > this._maxY ||
-        //   this._poleX < 0 ||
-        //   this._poleY < 0
-        // ) {
-        //   this.viewModel.enableError(true, "One of rules is violated");
-        //   this._poleX =
-        //     this._poleY =
-        //     this._clusterMinSize =
-        //     this._clusterTypes =
-        //       0;
-        //   return;
-        // }
+        if (
+          this._poleX > this._maxX ||
+          this._poleY > this._maxY ||
+          this._poleX < 0 ||
+          this._poleY < 0
+        ) {
+          this.viewModel.enableError(true, "One of rules is violated");
+          this._poleX =
+            this._poleY =
+            this._clusterMinSize =
+            this._clusterTypes =
+              0;
+          return;
+        }
         this.isGenering = true;
         this.afterStart();
-      },
-      this
+      }
     );
+  }
+
+  private clusterArrClean() {
+    this.clustersArr.forEach((item: Node[]) => {
+      item.map((i: Node) => {
+        console.log("clear");
+        i.getComponent(SymbolEmmiter).cancelAnimation();
+      });
+    });
+    this.clustersArr = [];
   }
 
   private afterStart() {
@@ -91,7 +97,7 @@ export class Model extends Component {
       this._poleY
     );
 
-    this.viewModel.muteElements(this.poleElements.children);
+    //this.viewModel.muteElements(this.poleElements.children);
     this.preferedArrayToAnmute();
   }
 
@@ -100,7 +106,6 @@ export class Model extends Component {
     let addNum = 0;
 
     for (let i = 0; i < this._poleY; i++) {
-      //preferedArray[i]=[];
       for (let j = 0; j < this._poleX; j++) {
         preferedArray[i * this._poleX + j] =
           this.poleElements.children[i * this._poleX + j + addNum];
@@ -110,14 +115,13 @@ export class Model extends Component {
             this._randomGenerator.getRandomPole(i * this._poleX + j)
           )
         );
-        console.log(i * this._poleX + j + "in arr");
         preferedArray[i * this._poleX + j].getComponent(SymbolEmmiter).colorId =
           this._randomGenerator.getRandomPole(i * this._poleX + j);
       }
       addNum += this._maxX - this._poleX;
     }
-
     this.defineClusters(preferedArray);
+
     this.ummuteClusters(preferedArray);
   }
 
@@ -136,12 +140,7 @@ export class Model extends Component {
       })
       .catch((error) => error)
       .then(() => this.markClusters())
-      .then(() => {
-        this.redrawLabel(100);
-      })
-      .then(() => {
-        this.isGenering = false;
-      });
+      .then(() => {});
   }
 
   update(deltaTime: number) {}
@@ -185,36 +184,38 @@ export class Model extends Component {
     }
   }
 
-  private markClusters() {
-    this.clustersArr.forEach((item: Node[]) => {
-      item.map((item: Node) => item.getComponent(SymbolEmmiter).setWin());
-    });
-    this.clustersArr = [];
+  private async markClusters() {
+    const sleep = (ms) =>
+      new Promise((resolve) => {
+        setTimeout(resolve, ms);
+      }).catch((error) => {});
+    this.markWins(sleep);
   }
 
-  private async redrawLabel(time: number) {
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  private async markWins(sleep) {
+    return await Promise.all(
+      this.clustersArr.map(async (item: Node[], index) => {
+        //await sleep((index + 1) * 1000);
+        item.forEach((item: Node) => {
+          item.getComponent(SymbolEmmiter).setWin((index + 1) * 1000);
+        });
 
-    await Promise.all(
-      this.poleElements.children.map(async (item, index) => {
-        await sleep(index * time);
-        this.viewModel.drawLabelForCluster(
-          item,
-          item.getComponent(SymbolEmmiter).selfSymbol
-        );
+        //await sleep(1000);
       })
-    ).catch((error) => error);
-    //const promises = arr.map(item=>this.viewModel.ummuteFixedCount(item));
+    )
+      .then(() => {
+        this.isGenering = false;
+      })
+      .catch((error) => {
+        console.log("ERRROR");
+      });
   }
 
   private resetCluster() {
     this.poleElements.children.forEach((item: Node) => {
       const emit = item.getComponent(SymbolEmmiter);
-      emit.selfSymbol = "";
       this.pool.returnToPool(emit);
     });
-    this.redrawLabel(0);
-    //this.viewModel.drawLabelForCluster(this.poleElements.children, "");
   }
 
   private recurseCheck(

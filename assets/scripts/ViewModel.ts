@@ -18,6 +18,8 @@ export class ViewModel extends Component {
   @property({ type: Label })
   private errorLabel: Label;
 
+  public runId: number;
+
   start() {}
 
   update(deltaTime: number) {}
@@ -50,14 +52,5 @@ export class ViewModel extends Component {
 
   public switchColor(elem: SymbolEmmiter, second: Node) {
     elem.setSelfPrefab(second);
-    //elem.addChild(second);
-    // elem.getComponentInChildren(sp.Skeleton).skeletonData = color;
-    // console.log(elem.name);
-  }
-
-  public drawLabelForCluster(cluster: Node, symb: string) {
-    if (cluster == null) return;
-
-    cluster.getComponentInChildren(Label).string = symb;
   }
 }

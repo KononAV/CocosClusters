@@ -11,16 +11,11 @@ export class PooliingSystem extends Component {
 
   private pool: Map<number, Array<Node>> = new Map();
 
-  start() {
-    console.log(this.smbManager.prefabs.length + " length");
-
-    //this.getElementFromPool(0);
-  }
+  start() {}
 
   public createDictForPool() {
     for (let i = 0; i < this.smbManager.prefabs.length; i++) {
       const newElem = instantiate(this.smbManager.prefabs[i]);
-      //newElem.getComponent(Selection).isActive = true;
       this.pool.set(i, []);
     }
   }
@@ -29,13 +24,11 @@ export class PooliingSystem extends Component {
     const iter: Node[] = this.pool.get(id);
     for (const elem of iter) {
       if (!elem.getComponent(Selection).isActive) {
-        console.log("element founded");
         elem.getComponent(Selection).isActive = true;
 
         return elem;
       }
     }
-    console.log("cant find");
     const newElem = instantiate(this.smbManager.prefabs[id]);
     this.pool.get(id).push(newElem);
     return newElem;
