@@ -13,16 +13,19 @@ export class Symbol extends Component {
   public playWin(anim: sp.Skeleton, delay: number) {
     this.cancelWin = false;
     console.log(this.playWinAsync(anim, delay));
+    return this.askDuration(anim, "win") * 1000;
+  }
+  private askDuration(anim: sp.Skeleton, name: string) {
+    return anim.findAnimation(name).duration;
   }
 
   private async playWinAsync(anim: sp.Skeleton, delay) {
     while (!this.cancelWin) {
       await new Promise((resolve) => {
-        setTimeout(resolve, delay + 1000);
+        setTimeout(resolve, delay);
       });
       console.log("promise");
       if (!this.cancelWin) anim.setAnimation(0, "win", false);
-      return await anim.findAnimation("win").duration;
     }
   }
   public playIn(anim: sp.Skeleton) {
