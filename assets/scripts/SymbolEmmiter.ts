@@ -28,6 +28,7 @@ export class SymbolEmmiter extends Component {
   }
 
   public setSelfPrefab(pref: Node) {
+    console.log("set self prefab");
     this.selfPrefab = pref;
     this.setPrefab();
   }
@@ -50,5 +51,8 @@ export class SymbolEmmiter extends Component {
 
   public cancelAnimation() {
     this.selfPrefab.getComponent(Symbol).cancelAnimation(this.anim);
+  }
+  public askDuration(name: string) {
+    return this.anim.findAnimation(name).duration * 1000;
   }
 }

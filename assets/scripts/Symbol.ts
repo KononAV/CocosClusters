@@ -6,26 +6,20 @@ export class Symbol extends Component {
   protected anim: sp.Skeleton;
 
   private cancelWin: boolean = false;
+  private idleCallback = null;
 
   protected start(): void {
     this.anim = this.getComponentInChildren(sp.Skeleton);
   }
-  public playWin(anim: sp.Skeleton, delay: number) {
+  public async playWin(anim: sp.Skeleton, delay: number) {
     this.cancelWin = false;
-    console.log(this.playWinAsync(anim, delay));
-    return this.askDuration(anim, "win") * 1000;
-  }
-  private askDuration(anim: sp.Skeleton, name: string) {
-    return anim.findAnimation(name).duration;
+    this.playWinAsync(anim, delay);
   }
 
-  private async playWinAsync(anim: sp.Skeleton, delay) {
+  private async playWinAsync(anim: sp.Skeleton, delay: number) {
     while (!this.cancelWin) {
-      await new Promise((resolve) => {
-        setTimeout(resolve, delay);
-      });
-      console.log("promise");
       if (!this.cancelWin) anim.setAnimation(0, "win", false);
+      await sleep(delay);
     }
   }
   public playIn(anim: sp.Skeleton) {
@@ -35,9 +29,14 @@ export class Symbol extends Component {
 
   public setIdle(anim: sp.Skeleton) {
     if (anim.findAnimation("idle")) {
-      this.schedule(() => {
+      this.unschedule(this.idleCallback);
+      this.idleCallback = () => {
         anim.setAnimation(0, "idle", false);
-      }, 2);
+      };
+      this.schedule(this.idleCallback, 5 + Math.random() * 25);
+    } else {
+      this.unschedule(this.idleCallback);
+      this.idleCallback = null;
     }
   }
 
@@ -45,4 +44,7 @@ export class Symbol extends Component {
     this.cancelWin = true;
     anim.clearAnimation(0);
   }
+}
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

@@ -184,33 +184,41 @@ export class Model extends Component {
     }
   }
 
+  private mathDuration() {
+    let delay = 0;
+    this.clustersArr.forEach((item: Node[]) => {
+      delay += item[0].getComponent(SymbolEmmiter).askDuration("win");
+    });
+    return delay;
+  }
+
   private async markClusters() {
-    const sleep = (ms) =>
+    const delay = this.mathDuration();
+    const sleep = (ms: number) =>
       new Promise((resolve) => {
         setTimeout(resolve, ms);
       }).catch((error) => {});
-    this.markWins(sleep);
+
+    await this.markWins(sleep, delay);
   }
 
-  private async markWins(sleep) {
-    return await Promise.all(
-      this.clustersArr.map(async (item: Node[], index) => {
-        //await sleep((index + 1) * 1000);
-        item.forEach((item: Node) => {
-          item.getComponent(SymbolEmmiter).setWin((index + 1) * 1000);
+  private async markWins(sleep, delay: number) {
+    try {
+      for (const cluster of this.clustersArr) {
+        const animations = cluster.map((item: Node) => {
+          return item.getComponent(SymbolEmmiter).setWin(delay);
         });
 
-        //await sleep(1000);
-      })
-    )
-      .then(() => {
-        this.isGenering = false;
-      })
-      .catch((error) => {
-        console.log("ERRROR");
-      });
-  }
+        await Promise.all(animations);
 
+        await sleep(1000);
+      }
+    } catch (error) {
+      console.log("ERROR", error);
+    } finally {
+      this.isGenering = false;
+    }
+  }
   private resetCluster() {
     this.poleElements.children.forEach((item: Node) => {
       const emit = item.getComponent(SymbolEmmiter);
