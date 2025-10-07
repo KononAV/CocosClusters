@@ -5,24 +5,31 @@ const { ccclass, property } = _decorator;
 export class Symbol extends Component {
   protected anim: sp.Skeleton;
 
-  private cancelWin: boolean = false;
+  private cancelWin: boolean = true;
   private idleCallback = null;
+  public isActive: boolean = true;
+  private currentDelay: number = 0;
 
   protected start(): void {
     this.anim = this.getComponentInChildren(sp.Skeleton);
   }
   public async playWin(anim: sp.Skeleton, delay: number) {
     this.cancelWin = false;
-    this.playWinAsync(anim, delay);
+    this.currentDelay = delay;
+    this.playWinAsync(anim);
   }
 
-  private async playWinAsync(anim: sp.Skeleton, delay: number) {
+  private async playWinAsync(anim: sp.Skeleton) {
     while (!this.cancelWin) {
       if (!this.cancelWin) anim.setAnimation(0, "win", false);
-      await sleep(delay);
+      await sleep(this.currentDelay);
     }
   }
   public playIn(anim: sp.Skeleton) {
+    this.currentDelay = 0;
+    this.cancelWin = true;
+    anim.clearAnimation(0);
+
     anim.setAnimation(0, "in", false);
   }
 

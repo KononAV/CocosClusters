@@ -2,6 +2,7 @@ import { _decorator, Component, instantiate, Node, Prefab } from "cc";
 import { SymbolManager } from "./SymbolManager";
 import { Selection } from "./Selection";
 import { SymbolEmmiter } from "./SymbolEmmiter";
+import { Symbol } from "./Symbol";
 const { ccclass, property } = _decorator;
 
 @ccclass("PooliingSystem")
@@ -25,8 +26,8 @@ export class PooliingSystem extends Component {
   public getElementFromPool(id: number): Node {
     const iter: Node[] = this.pool.get(id);
     for (const elem of iter) {
-      if (!elem.getComponent(Selection).isActive) {
-        elem.getComponent(Selection).isActive = true;
+      if (!elem.getComponent(Symbol).isActive) {
+        elem.getComponent(Symbol).isActive = true;
 
         return elem;
       }
@@ -36,7 +37,7 @@ export class PooliingSystem extends Component {
     return newElem;
   }
 
-  public returnToPool(selection: SymbolEmmiter) {
+  public returnToPool(selection: Symbol) {
     selection.isActive = false;
   }
 

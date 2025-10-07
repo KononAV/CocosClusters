@@ -13,6 +13,7 @@ import { RandomGenerator } from "./RandomGenerator";
 import { Selection } from "./Selection";
 import { PooliingSystem } from "./PooliingSystem";
 import { SymbolEmmiter } from "./SymbolEmmiter";
+import { Symbol } from "./Symbol";
 const { ccclass, property } = _decorator;
 
 @ccclass("Model")
@@ -52,9 +53,10 @@ export class Model extends Component {
       "start-clusters",
       (eventData: { params: Map<string, number> }) => {
         if (this.isGenering) return;
-        this.clusterArrClean();
+
         this.viewModel.muteElements(this.poleElements.children);
-        this.resetCluster();
+        //this.resetCluster();
+        this.clusterArrClean();
         let params = eventData.params;
         this._clusterTypes = params.get("EnterX<EditBox>")!;
         this._clusterMinSize = params.get("EnterY<EditBox>")!;
@@ -87,6 +89,7 @@ export class Model extends Component {
     this.clustersArr.forEach((item: Node[]) => {
       item.map((i: Node) => {
         i.getComponent(SymbolEmmiter).cancelAnimation();
+        this.pool.returnToPool(i.getComponent(SymbolEmmiter).getSelfPrefSymb());
       });
     });
     this.clustersArr = [];
@@ -205,6 +208,8 @@ export class Model extends Component {
 
   private async markWins(sleep, delay: number) {
     try {
+      if (this.clustersArr.length != 0) await sleep(1000);
+
       for (const cluster of this.clustersArr) {
         const animations = cluster.map((item: Node) => {
           return item.getComponent(SymbolEmmiter).setWin(delay);
@@ -218,12 +223,6 @@ export class Model extends Component {
     } finally {
       this.isGenering = false;
     }
-  }
-  private resetCluster() {
-    this.poleElements.children.forEach((item: Node) => {
-      const emit = item.getComponent(SymbolEmmiter);
-      this.pool.returnToPool(emit);
-    });
   }
 
   private recurseCheck(

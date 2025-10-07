@@ -53,4 +53,9 @@ export class SymbolEmmiter extends Component {
   public askDuration(name: string) {
     return this.anim.findAnimation(name).duration * 1000;
   }
+  public getSelfPrefSymb() {
+    this.selfPrefab.getComponent(Symbol).cancelAnimation(this.anim);
+
+    return this.selfPrefab.getComponent(Symbol);
+  }
 }
