@@ -51,12 +51,15 @@ export class Model extends Component {
 
     director.on(
       "start-clusters",
-      (eventData: { params: Map<string, number> }) => {
+      async (eventData: { params: Map<string, number> }) => {
         if (this.isGenering) return;
 
         this.viewModel.muteElements(this.poleElements.children);
         //this.resetCluster();
+
         this.clusterArrClean();
+
+        console.log("resolve");
         let params = eventData.params;
         this._clusterTypes = params.get("EnterX<EditBox>")!;
         this._clusterMinSize = params.get("EnterY<EditBox>")!;
@@ -208,7 +211,7 @@ export class Model extends Component {
 
   private async markWins(sleep, delay: number) {
     try {
-      if (this.clustersArr.length != 0) await sleep(1000);
+      if (this.clustersArr.length != 0) await sleep(2000);
 
       for (const cluster of this.clustersArr) {
         const animations = cluster.map((item: Node) => {
@@ -267,4 +270,7 @@ export class Model extends Component {
     )
       this.recurseCheck(arr, cluster, i + 1, j);
   }
+}
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
