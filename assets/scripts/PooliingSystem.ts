@@ -10,6 +10,7 @@ export class PooliingSystem extends Component {
   private smbManager: SymbolManager;
 
   private pool: Map<number, Array<Node>> = new Map();
+  private currentLength: number = 0;
 
   start() {}
 
@@ -18,6 +19,7 @@ export class PooliingSystem extends Component {
       const newElem = instantiate(this.smbManager.prefabs[i]);
       this.pool.set(i, []);
     }
+    this.currentLength = this.pool.size;
   }
 
   public getElementFromPool(id: number): Node {
@@ -36,6 +38,10 @@ export class PooliingSystem extends Component {
 
   public returnToPool(selection: SymbolEmmiter) {
     selection.isActive = false;
+  }
+
+  public getLength() {
+    return this.currentLength;
   }
 
   update(deltaTime: number) {}

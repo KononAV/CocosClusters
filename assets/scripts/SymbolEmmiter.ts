@@ -28,7 +28,6 @@ export class SymbolEmmiter extends Component {
   }
 
   public setSelfPrefab(pref: Node) {
-    console.log("set self prefab");
     this.selfPrefab = pref;
     this.setPrefab();
   }
@@ -38,8 +37,7 @@ export class SymbolEmmiter extends Component {
     this.anim.skeletonData = this.selfPrefab.getComponentInChildren(
       sp.Skeleton
     ).skeletonData;
-    //this.anim.setAnimation(0, "in", false);
-    // this.isWin = false;
+
     this.selfPrefab.getComponent(Symbol).playIn(this.anim);
 
     this.selfPrefab.getComponent(Symbol).setIdle(this.anim);

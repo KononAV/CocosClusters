@@ -64,7 +64,9 @@ export class Model extends Component {
           this._poleX > this._maxX ||
           this._poleY > this._maxY ||
           this._poleX < 0 ||
-          this._poleY < 0
+          this._poleY < 0 ||
+          this.pool.getLength() < this._clusterTypes ||
+          this._clusterTypes <= 0
         ) {
           this.viewModel.enableError(true, "One of rules is violated");
           this._poleX =
@@ -72,6 +74,7 @@ export class Model extends Component {
             this._clusterMinSize =
             this._clusterTypes =
               0;
+
           return;
         }
         this.isGenering = true;
@@ -83,7 +86,6 @@ export class Model extends Component {
   private clusterArrClean() {
     this.clustersArr.forEach((item: Node[]) => {
       item.map((i: Node) => {
-        console.log("clear");
         i.getComponent(SymbolEmmiter).cancelAnimation();
       });
     });
@@ -97,7 +99,6 @@ export class Model extends Component {
       this._poleY
     );
 
-    //this.viewModel.muteElements(this.poleElements.children);
     this.preferedArrayToAnmute();
   }
 
@@ -214,7 +215,6 @@ export class Model extends Component {
         await sleep(1000);
       }
     } catch (error) {
-      console.log("ERROR", error);
     } finally {
       this.isGenering = false;
     }

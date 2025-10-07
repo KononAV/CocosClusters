@@ -24,7 +24,6 @@ export class Symbol extends Component {
   }
   public playIn(anim: sp.Skeleton) {
     anim.setAnimation(0, "in", false);
-    //this.isWin = false;
   }
 
   public setIdle(anim: sp.Skeleton) {

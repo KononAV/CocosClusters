@@ -8,10 +8,6 @@ export class Selection extends Symbol {
 
   public isActive: boolean = true;
 
-  //   public playWin(anim: sp.Skeleton) {
-  //     super.playWin(anim);
-  //   }
-
   public playIn(anim: sp.Skeleton) {
     super.playIn(anim);
   }
