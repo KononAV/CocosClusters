@@ -51,15 +51,13 @@ export class Model extends Component {
 
     director.on(
       "start-clusters",
-      async (eventData: { params: Map<string, number> }) => {
+      (eventData: { params: Map<string, number> }) => {
         if (this.isGenering) return;
 
         this.viewModel.muteElements(this.poleElements.children);
-        //this.resetCluster();
 
         this.clusterArrClean();
 
-        console.log("resolve");
         let params = eventData.params;
         this._clusterTypes = params.get("EnterX<EditBox>")!;
         this._clusterMinSize = params.get("EnterY<EditBox>")!;
@@ -196,7 +194,7 @@ export class Model extends Component {
     this.clustersArr.forEach((item: Node[]) => {
       delay += item[0].getComponent(SymbolEmmiter).askDuration("win");
     });
-    return delay;
+    return this.clustersArr.length > 1 ? delay / 1.5 : delay;
   }
 
   private async markClusters() {
@@ -211,18 +209,16 @@ export class Model extends Component {
 
   private async markWins(sleep, delay: number) {
     try {
-      if (this.clustersArr.length != 0) await sleep(2000);
+      if (this.clustersArr.length !== 0) await sleep(1000);
 
       for (const cluster of this.clustersArr) {
-        const animations = cluster.map((item: Node) => {
+        const promises = cluster.map(async (item: Node) => {
           return item.getComponent(SymbolEmmiter).setWin(delay);
         });
 
-        await Promise.all(animations);
-
+        await Promise.all(promises);
         await sleep(1000);
       }
-    } catch (error) {
     } finally {
       this.isGenering = false;
     }
@@ -270,7 +266,4 @@ export class Model extends Component {
     )
       this.recurseCheck(arr, cluster, i + 1, j);
   }
-}
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
